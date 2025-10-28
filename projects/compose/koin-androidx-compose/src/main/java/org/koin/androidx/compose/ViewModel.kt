@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:Suppress("DeprecatedCallableAddReplaceWith")
 
 package org.koin.androidx.compose
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import org.koin.compose.currentKoinScope
@@ -51,16 +51,3 @@ inline fun <reified T : ViewModel> koinViewModel(
         T::class, viewModelStoreOwner.viewModelStore, key, extras, qualifier, scope, parameters
     )
 }
-
-@Composable
-@Deprecated("This API is deprecated and will be removed in next version. use koinViewModel() instead", replaceWith = ReplaceWith("koinViewModel"), level = DeprecationLevel.ERROR)
-inline fun <reified T : ViewModel> getViewModel(
-    qualifier: Qualifier? = null,
-    viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
-        "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
-    },
-    key: String? = null,
-    extras: CreationExtras = defaultExtras(viewModelStoreOwner),
-    scope: Scope = currentKoinScope(),
-    noinline parameters: ParametersDefinition? = null,
-): T = TODO("this function is deprecated")

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:Suppress("DeprecatedCallableAddReplaceWith")
 
 package org.koin.androidx.compose.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import org.koin.compose.currentKoinScope
@@ -38,7 +38,13 @@ import org.koin.viewmodel.resolveViewModel
  * @author Arnaud Giuliani
  */
 @OptIn(KoinInternalApi::class)
-@Deprecated("koinViewModel() can be used instead of koinNavViewModel(), as it's embedding nav backstack arguments")
+@Deprecated(
+    message = "koinNavViewModel is deprecated. Use koinViewModel instead.",
+    replaceWith = ReplaceWith(
+        expression = "koinViewModel()",
+        imports = ["org.koin.compose.viewmodel.koinViewModel"]
+    )
+)
 @Composable
 inline fun <reified T : ViewModel> koinNavViewModel(
     qualifier: Qualifier? = null,

@@ -29,8 +29,10 @@ import org.koin.core.parameter.ParametersDefinition
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.TypeQualifier
 import org.koin.core.registry.InstanceRegistry
+import org.koin.core.registry.OptionRegistry
 import org.koin.core.registry.PropertyRegistry
 import org.koin.core.registry.ScopeRegistry
+import org.koin.core.resolution.CoreResolver
 import org.koin.core.scope.Scope
 import org.koin.core.scope.ScopeID
 import org.koin.core.time.inMs
@@ -50,6 +52,13 @@ import kotlin.time.measureTime
 class Koin {
 
     @KoinInternalApi
+    var logger: Logger = EmptyLogger()
+        private set
+
+    @KoinInternalApi
+    val resolver = CoreResolver(this)
+
+    @KoinInternalApi
     val scopeRegistry = ScopeRegistry(this)
 
     @KoinInternalApi
@@ -62,8 +71,7 @@ class Koin {
     val extensionManager = ExtensionManager(this)
 
     @KoinInternalApi
-    var logger: Logger = EmptyLogger()
-        private set
+    val optionRegistry = OptionRegistry()
 
     @KoinInternalApi
     fun setupLogger(logger: Logger) {
@@ -182,17 +190,17 @@ class Koin {
      * @param scopeId
      * @param scopeDefinitionName
      */
-    fun createScope(scopeId: ScopeID, qualifier: Qualifier, source: Any? = null): Scope {
-        return scopeRegistry.createScope(scopeId, qualifier, source)
+    fun createScope(scopeId: ScopeID, qualifier: Qualifier, source: Any? = null, scopeArchetype : TypeQualifier? = null): Scope {
+        return scopeRegistry.createScope(scopeId, qualifier, source,scopeArchetype)
     }
 
     /**
      * Create a Scope instance
      * @param scopeId
      */
-    inline fun <reified T : Any> createScope(scopeId: ScopeID, source: Any? = null): Scope {
+    inline fun <reified T : Any> createScope(scopeId: ScopeID, source: Any? = null, scopeArchetype : TypeQualifier? = null): Scope {
         val qualifier = TypeQualifier(T::class)
-        return scopeRegistry.createScope(scopeId, qualifier, source)
+        return scopeRegistry.createScope(scopeId, qualifier, source, scopeArchetype)
     }
 
     /**

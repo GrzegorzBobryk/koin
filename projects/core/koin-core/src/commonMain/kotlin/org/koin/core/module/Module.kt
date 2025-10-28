@@ -54,8 +54,8 @@ class Module(
         get() = mappings.isNotEmpty()
 
 
-    @PublishedApi
-    internal val scopes = LinkedHashSet<Qualifier>()
+    @KoinInternalApi
+    val scopes = LinkedHashSet<Qualifier>()
 
     @KoinInternalApi
     val includedModules = mutableListOf<Module>()
@@ -231,7 +231,7 @@ operator fun List<Module>.plus(module: Module): List<Module> = this + listOf(mod
 /**
  * Run through the module list to flatten all modules & submodules
  */
-@OptIn(KoinInternalApi::class)
+@KoinInternalApi
 fun flatten(modules: List<Module>): Set<Module> {
     // This is actually a DFS traversal of the module graph,
     // but we're using a stack instead of recursion to avoid stack overflows and performance overhead.
@@ -248,7 +248,7 @@ fun flatten(modules: List<Module>): Set<Module> {
         }
 
         // Add all the included modules to the stack if they haven't been visited yet.
-        for (module in current.includedModules) {
+        for (module in current.includedModules.asReversed()) {
             if (module !in flatten) {
                 stack += module
             }
